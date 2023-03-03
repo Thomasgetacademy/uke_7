@@ -215,10 +215,18 @@ img {
     right: 15%;
 }
 
+#trainerBar {
+
+}
+
 .playerPokemon {
     width: 300px;
     position: absolute;
     bottom: 7%;
     left: 500px;
+    
+}
+
+#playerBar {
     
 }
