@@ -1,0 +1,224 @@
+body {
+    text-align: center;
+}
+
+.mainDiv {
+    display: inline-block;
+}
+
+
+img {
+    display: inline-block;
+    width: 200px;
+}
+
+.mainImg {
+    width: 300px;
+}
+
+.blueSky {
+    background-color: aqua;
+}
+
+/* ! Grass View */
+
+.exploreTxt {
+    width: 50%;
+    margin: auto;
+    margin-top: 15%;
+    align-items: center;
+}
+
+.exploreButton3 {
+    position: absolute;
+    font-size: 2rem;
+    bottom: 50px;
+    left: 47%;
+    background-color: aquamarine;
+}
+
+.exploreButton2 {
+    position: absolute;
+    font-size: 2rem;
+    bottom: 50px;
+    left: 27%;
+    background-color: aquamarine;
+}
+
+
+.exploreButton1 {
+    position: absolute;
+    font-size: 2rem;
+    bottom: 50px;
+    left: 37%;
+    background-color: aquamarine;
+}
+
+.myProgress {
+    width: 100%;
+    background-color: grey;
+}
+
+.myBar {
+    width: 100%;
+    height: 30px;
+    background-color: #04AA6D;
+    text-align: center;
+    line-height: 30px;
+    color: black;
+}
+
+/* Pokeball catch */
+
+.pokeball {
+    animation: shake 1.25s cubic-bezier(.36, .07, .19, .97) 3;
+}
+
+/* Animation */
+
+@keyframes shake {
+    0% {
+        transform: translate(0, 0) rotate(0);
+    }
+
+    20% {
+        transform: translate(-10px, 0) rotate(-20deg);
+    }
+
+    30% {
+        transform: translate(10px, 0) rotate(20deg);
+    }
+
+    50% {
+        transform: translate(-10px, 0) rotate(-10deg);
+    }
+
+    60% {
+        transform: translate(10px, 0) rotate(10deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0);
+    }
+}
+
+/* ! Pokemon battle View */
+
+.pokemonBattleDiv {
+    position: fixed;
+    background-image: url('images/battle.png');
+    background-size: cover;
+    background-color: #04AA6D;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+}
+
+/* * Trainer CSS*/
+
+.trainerDiv {
+    position: absolute;
+    right: 30px;
+    height: 400px;
+    width: 400px;
+    animation: slideInTrainer 3s forwards;
+}
+
+.trainerDiv img {
+    height: 100%;
+    width: 100%;
+    object-fit: auto;
+}
+
+
+
+.trainerPokeball {
+    position: absolute;
+    right: 30px;
+    top: 200px;
+    width: 50px;
+    animation: slideInTrainer 3s forwards, throw 3s;
+    animation-delay: 0s, 3s, 6s;
+}
+
+@keyframes slideInTrainer {
+    0% {
+        transform: translateX(-900px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes throw {
+    0% {
+        transform: translateX(0px) translatey(0px);
+    }
+
+    50% {
+        transform: translateX(-400px) translatey(50px);
+    }
+
+    100% {
+        transform: translateX(-500px) translatey(200px);
+    }
+}
+
+/* * Player CSS */
+
+.playerImg {
+    position: absolute;
+    bottom: 0px;
+    left: 30px;
+    animation: slideInPlayer 3s forwards;
+}
+
+.playerPokeball {
+    width: 50px;
+    position: absolute;
+    bottom: 50px;
+    left: 200px;
+    animation: slideInPlayer 3s forwards, throwPlayer 3s;
+    animation-delay: 0s, 3s;
+}
+
+@keyframes slideInPlayer {
+    0% {
+        transform: translateX(900px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes throwPlayer {
+    0% {
+        transform: translateX(0px) translatey(0px);
+    }
+
+    50% {
+        transform: translateX(300px) translatey(-100px);
+    }
+
+    100% {
+        transform: translateX(425px) translatey(-250px);
+    }
+}
+
+.trainerPokemon {
+    width: 200px;
+    position: absolute;
+    top: 30%;
+    right: 15%;
+}
+
+.playerPokemon {
+    width: 300px;
+    position: absolute;
+    bottom: 7%;
+    left: 500px;
+    
+}
