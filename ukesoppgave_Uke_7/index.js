@@ -5,8 +5,7 @@ const mainDiv = document.getElementById('app');
 const catchButton = document.getElementsByClassName("exploreButton2");
 const pokemon = document.getElementsByClassName("explorePokemon");
 const myBar = document.getElementsByClassName("myBar"); /* Pokemon hp bar in grass View */
-const trainerBar = document.getElementById("trainerBar"); /* Trainer hp bar in Battle View */
-const playerBar = document.getElementById("playerBar"); /* Player pokemon hp bar in Battle view */
+
 
 
 /* Global Variables */
@@ -57,7 +56,7 @@ let catchedPokemons = [{
     name: 'Bulbasaur',
     attack: 'Vine Whip'
 },
-]; 
+];
 
 
 let trainerArray = ['Brock', 'Janine', 'Morty', 'Surge'];
@@ -66,10 +65,13 @@ let html; /* Created here to be able to access it in multiple views */
 let hpBarIndex = 0;
 let width = 100;
 let playTrainerAnimation = false;
+let playerHP = 100;
+let trainerHP = 100;
+let trainerChosenPokemon = '';
 
 // grassView();
-mainView();
-// trainerView();
+// mainView();
+trainerView();
 
 /* --------------------------------------------------- View -------------------------------------------------------------*/
 
@@ -95,7 +97,7 @@ function grassView() {
     } else if (randomEvent() > 0.2) { /* 20% chance to get a pokemon encounter or a text based encounter. should say 0.2 */
         width = 20;
         randomIndex = randomPokemonIndex(randomIndex);
-        pokeName = pokemonArray[randomIndex].name;
+        let pokeName = pokemonArray[randomIndex].name;
         hpBarIndex = 0;
         html = /* HTML */`
 
@@ -137,7 +139,7 @@ function pokemonEscapedOrCapturedView(pokeIndex, escapedOrCaptured) {
         `;
     } else {
         catchedPokemons.push(pokemonArray[pokeIndex].name);
-        console.log(catchedPokemons);
+        // console.log(catchedPokemons);
         let countOfPokemonsLeft = pokemonArray.length - catchedPokemons.length;
 
         html = /* HTML */`
@@ -177,15 +179,17 @@ function noPokemonsView() {
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Xurrent>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
 function trainerView() {
-    let chosenPokemon;
     let playerChoice = true;
-    catchedPokemons.length === 0 ? noPokemonsView() : chosenPokemon = choosePokemon(playerChoice);
+
+    trainerChosenPokemon === '' ? trainerChosenPokemon = choosePokemon() : '';
+    catchedPokemons.length === 0 ? noPokemonsView() : playerChosenPokemon = choosePokemon(playerChoice);
+
     /* Animation view */
     if (playTrainerAnimation && catchedPokemons.length != 0) {
         let html = /* HTML */`
         <div class='pokemonBattleDiv'>
             <div class='trainerDiv'>
-                <img class='trainerImg' src='images/trainerImg/${choosePokemon()}.png'>
+                <img class='trainerImg' src='images/trainerImg/${trainerChosenPokemon.name}.png'>
             </div>
             <img class='trainerPokeball'src='images/pokeball.png'>
 
@@ -201,37 +205,93 @@ function trainerView() {
         let html = /* HTML */`
         <div class='pokemonBattleDiv'>
             <div class='trainerPokemon'>
-                <div class=""> 
-                    <div id="trainerBar">100%</div>
+
+                <div class="myProgress"> 
+                    <div id="trainerBar">${trainerHP}%</div>
                 </div>
-                <img src='images/pokemonImg/${choosePokemon()}.png'>
+
+                <img src='images/pokemonImg/${trainerChosenPokemon.name}.png'>
             </div>
+            
             <div class='playerPokemon'>
-                <div id="playerBar"> 
-                    <div id="">100%</div>
+
+                <div class="myProgress"> 
+                    <div id="playerBar">${playerHP}%</div>
                 </div>
-                <img  src='images/pokemonImg/${chosenPokemon.name}.png'>
+
+                <img  src='images/pokemonImg/${playerChosenPokemon.name}.png'>
+                <button style='font-size: 30px;' onclick=battleDamage()>Attack!</button>
             </div>
         </div>
         `;
         mainDiv.innerHTML = html;
     }
-    console.log(playerBar.inner);
+}
+
+function battleViewWon(whoWon) {
+    if (whoWon === 'trainer') {
+        html = /* HTML */`
+        <div class='pokemonBattleDiv'>
+            <div class='trainerPokemon'>
+                <img src='images/pokemonImg/${test}.png'>
+            </div>
+
+            <div class='playerPokemon'>
+                <img  src='images/pokemonImg/${playerChosenPokemon.name}.png'>
+        `
+    }
+    mainDiv.innerHTML = html;
 }
 
 /* --------------------------------------------------- CONTROLLER -------------------------------------------------------*/
+
+function battleDamage() {
+    if (hpBarIndex === 0) {
+        let trainerBar = document.getElementById("trainerBar"); /* Trainer hp bar in Battle View */
+        const playerBar = document.getElementById("playerBar"); /* Player pokemon hp bar in Battle view */
+
+        let trainerBarStyle = trainerBar.style;
+        let playerBarStyle = playerBar.style;
+
+        let trainerDamage = randomDmg(); /* Amount of damage done is a random number between 1 and 20 */
+        let playerDamage = randomDmg(); /* Amount of damage done is a random number between 1 and 20 */
+
+        let newTrainerWidth = trainerHP - trainerDamage; /* The "width" the progress bar should stop at */
+        let newPlayerWidth = playerHP - playerDamage; /* The "width" the progress bar should stop at */
+
+        let trainerId = setInterval(frame, 10);
+        function frame() {
+            if (trainerHP <= newTrainerWidth) { /* Change width number to where the progress should stop */
+                clearInterval(trainerId);
+            } else {
+                trainerHP--;
+                trainerBarStyle.width = trainerHP + "%";
+                
+                /* If width(progressbar) is at 0, then the program will pokemonFaintedView function will be called */
+                trainerHP <= 0 ? (hpBarIndex = 1, battleViewWon('trainer')) : trainerBar.innerHTML = trainerHP + "%";
+                if (trainerHP <= 0) {
+                } else if (trainerHP < 30) {
+                    trainerBarStyle.backgroundColor = "red";
+                } else if (trainerHP < 60) {
+                    trainerBarStyle.backgroundColor = "yellow";
+                }
+            }
+        }
+    }
+}
 
 function choosePokemon(playerChoice) { /* Should be a view for the user to choose what pokemon the user wants to bring into battle, and give the opponent a random pokemon */
     if (playerChoice) {
         return catchedPokemons[0];
     } else {
         randomIndex = Math.floor(Math.random() * pokemonArray.length);
-        return pokemonArray[randomIndex].name;
+        console.log(pokemonArray[randomIndex]);
+        return pokemonArray[randomIndex];
     }
 
 }
 
-function randomEvent() { /* Returns a number between 0 and 1 */
+function randomEvent() { /* Returns a number between 0 and 1, this chooses what event in the grassView is going to happen */
     return Math.random();
 }
 
